@@ -3,7 +3,7 @@ const Booking = require("../models/Booking");
 const Event = require("../models/Event");
 const User = require("../models/User");
 const OTP = require("../models/OTP");
-const nodemailer = require("nodemailer");
+const { sendEmail } = require("../utils/emailService");
 const crypto = require("crypto");
 
 const transporter = nodemailer.createTransport({
