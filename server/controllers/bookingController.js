@@ -6,14 +6,6 @@ const OTP = require("../models/OTP");
 const { sendEmail } = require("../utils/emailService");
 const crypto = require("crypto");
 
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-    },
-});
-
 // Request a booking OTP
 const createBooking = async (req, res) => {
     try {
@@ -67,8 +59,7 @@ const createBooking = async (req, res) => {
             expiresAt: new Date(Date.now() + 5 * 60 * 1000),
         });
 
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
+        await sendEmail({
             to: user.email,
             subject: "Eventora Booking OTP",
             text: `Your OTP for booking ${event.title} is ${otp}. It expires in 5 minutes.`,
