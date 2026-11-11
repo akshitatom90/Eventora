@@ -27,6 +27,12 @@ const bookingSchema = new mongoose.Schema(
             enum: ["pending", "confirmed", "cancelled"],
             default: "pending",
         },
+        // Soft hide: the booking stays in the database (admin still sees it),
+        // but the user removes it from their own history.
+        hiddenFromUser: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );

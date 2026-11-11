@@ -174,6 +174,7 @@ const getMyBookings = async (req, res) => {
     try {
         const bookings = await Booking.find({
             userId: req.user.id,
+            hiddenFromUser: { $ne: true },
         })
             .populate("eventId")
             .sort({ createdAt: -1 });
@@ -223,6 +224,37 @@ const cancelBooking = async (req, res) => {
 
         return res.status(500).json({
             message: "Failed to cancel booking",
+        });
+    }
+};
+
+// Hide a booking from the logged-in user's history (soft delete)
+const hideBooking = async (req, res) => {
+    try {
+        const booking = await Booking.findOneAndUpdate(
+            {
+                _id: req.params.id,
+                userId: req.user.id,
+            },
+            { $set: { hiddenFromUser: true } },
+            { new: true }
+        );
+
+        if (!booking) {
+            return res.status(404).json({
+                message: "Booking not found",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Booking removed from your history.",
+            booking,
+        });
+    } catch (error) {
+        console.error("Hide booking error:", error.message);
+
+        return res.status(500).json({
+            message: "Failed to remove booking from your history",
         });
     }
 };
@@ -319,6 +351,7 @@ module.exports = {
     verifyBookingOTP,
     getMyBookings,
     cancelBooking,
+    hideBooking,
     getAllBookings,
     updateBookingStatus,
 };

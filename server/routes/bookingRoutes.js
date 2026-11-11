@@ -4,6 +4,7 @@ const {
     createBooking,
     getMyBookings,
     cancelBooking,
+    hideBooking,
     getAllBookings,
     updateBookingStatus,
     verifyBookingOTP,
@@ -29,6 +30,9 @@ router.get("/my-bookings", protect, getMyBookings);
 
 // Cancel my booking
 router.delete("/:id", protect, cancelBooking);
+
+// Hide my booking from my history (soft delete)
+router.delete("/:id/hide", protect, hideBooking);
 
 // Admin: view all bookings
 router.get("/", protect, adminOnly, getAllBookings);    
